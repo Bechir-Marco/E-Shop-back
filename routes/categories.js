@@ -10,5 +10,12 @@ router.get(`/`, async (req, res) =>{
     } 
     res.send(categoryList);
 })
+router.post('/', async (req, res) => { 
+    const category = new Category({
+        name: req.body.name,
+        color: req.body.color,
+        icon: req.body.icon,
+    })
+});
 
 module.exports =router;
