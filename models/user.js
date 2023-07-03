@@ -6,6 +6,7 @@ const userSchema = mongoose.Schema({
     countInStock: {
         type: Number,
         required: true
+        
     }
 })
 
