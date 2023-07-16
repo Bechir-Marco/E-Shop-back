@@ -103,6 +103,7 @@ router.post(`/login`, async (req, res) => {
               {
                 userId: user.id,
                 isAdmin: user.isAdmin,
+                isRevoked: isRevoked
               },
               process.env.TOKEN_SECRET,
               { expiresIn: '1d' }
@@ -117,5 +118,34 @@ router.post(`/login`, async (req, res) => {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
+});
+
+router.get('/get/count', async (req, res) => {
+  try {
+    const users = await User.countDocuments({});
+    if (!users) {
+      return res.status(500).json({ success: false });
+    }
+    res.send({
+      users: users,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+async function isRevoked(req, payload, done) { 
+  if (!payload.isAdmin) {
+    done(null, true);
+  }
+  done ()
+}
+router.delete('/:id', async (req, res) => {
+  let user = await User.findByIdAndRemove(req.params.id);
+  if (!user) return res.status(404).send('the user not found!');
+  else
+    return res
+      .status(200)
+      .json({ success: true, message: 'the user is deleted!' });
 });
 module.exports =router;
